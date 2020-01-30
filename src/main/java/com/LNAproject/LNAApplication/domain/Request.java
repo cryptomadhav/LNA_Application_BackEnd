@@ -6,29 +6,29 @@ import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name="request")
+//@Table(name="request")
 public class Request {
-    @Id @GeneratedValue
-    @Column(name = "request_id")
+    @Id //@GeneratedValue
+//    @Column(name = "request_id")
     private String request_id;
 
-    @Column(name = "request_status")
+//    @Column(name = "request_status")
     private String status;
 
-    @Column(name = "student_id")
+//    @Column(name = "student_id")
     private String student_id;
 
-    @OneToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "student_id", insertable = false, updatable = false)
-    private Student student;
+//    @OneToOne
+//    @JoinColumn(name = "student_id", referencedColumnName = "student_id", insertable = false, updatable = false)
+//    private Student student;
 
-    @Column(name = "purpose")
+//    @Column(name = "purpose")
     private String purpose;
 
-    @Column(name = "expected_in-time")
+//    @Column(name = "expected_in-time")
     private Timestamp expectedInTime;
 
-    @Column(name = "expected_out-time")
+//    @Column(name = "expected_out-time")
     private Timestamp expectedOutTime;
 
 
@@ -69,13 +69,13 @@ public class Request {
         this.student_id = student_id;
     }
 
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
+//    public Student getStudent() {
+//        return student;
+//    }
+//
+//    public void setStudent(Student student) {
+//        this.student = student;
+//    }
 
     public String getPurpose() {
         return purpose;

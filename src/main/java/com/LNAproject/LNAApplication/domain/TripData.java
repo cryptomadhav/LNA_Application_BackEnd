@@ -1,32 +1,30 @@
 package com.LNAproject.LNAApplication.domain;
 
 import javax.persistence.*;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 
 @Entity
-@Table(name="trip_data")
+//@Table(name="trip_data")
 public class TripData {
     @Id
-    @GeneratedValue
-    @Column(name = "trip_id")
+//    @GeneratedValue
+//    @Column(name = "trip_id")
     private String trip_id;
 
-    @Column(name = "student_id")
+//    @Column(name = "student_id")
     private String student_id;
+//
+//    @OneToOne
+//    @JoinColumn(name = "student_id", referencedColumnName = "student_id", insertable = false, updatable = false)
+//    private Student student;
 
-    @OneToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "student_id", insertable = false, updatable = false)
-    private Student student;
-
-    @Column(name = "permission_present")
+//    @Column(name = "permission_present")
     boolean permissionPresent;
 
-    @Column(name = "actual_out_time")
+//    @Column(name = "actual_out_time")
     private Timestamp actual_out_time;
 
-    @Column(name = "actual_in_time")
+//    @Column(name = "actual_in_time")
     private Timestamp actual_in_time;
 
     public TripData() {
@@ -54,14 +52,14 @@ public class TripData {
     public void setStudent_id(String student_id) {
         this.student_id = student_id;
     }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
+//
+//    public Student getStudent() {
+//        return student;
+//    }
+//
+//    public void setStudent(Student student) {
+//        this.student = student;
+//    }
 
     public boolean isPermissionPresent() {
         return permissionPresent;

@@ -1,14 +1,12 @@
 package com.LNAproject.LNAApplication.controller;
 
 import com.LNAproject.LNAApplication.domain.Request;
+import com.LNAproject.LNAApplication.domain.Student;
 import com.LNAproject.LNAApplication.domain.TripData;
-import com.LNAproject.LNAApplication.repository.ParentRepository;
-import com.LNAproject.LNAApplication.repository.RequestRepository;
-import com.LNAproject.LNAApplication.repository.StudentRepository;
-import com.LNAproject.LNAApplication.repository.TripDataRepository;
+import com.LNAproject.LNAApplication.domain.User;
+import com.LNAproject.LNAApplication.repository.*;
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
@@ -27,6 +25,8 @@ public class LnaController{
     RequestRepository requestRepository;
     @Autowired
     TripDataRepository tripDataRepository;
+    @Autowired
+    UserRepository userRepository;
 
     //only admin can access all students request data
     @GetMapping(value = "/request")
@@ -51,6 +51,21 @@ public class LnaController{
     @GetMapping(value = "/trip")
     public List<TripData> viewAllTripData() {
         return (List<TripData>) tripDataRepository.findAll();
+    }
+
+    //get all students data
+    @GetMapping(value = "/student")
+    public List<Student> viewAllStudent() {
+        return (List<Student>) studentRepository.findAll();
+    }
+
+    //Enter list of students in post body
+    @PostMapping(value = "/student")
+    public void enterStudentDetails(@RequestBody @NotNull List<Student> students) {
+        for(Student student : students) {
+            studentRepository.save(student);
+            userRepository.save(new User(student.getStudentId(), "student"));
+        }
     }
 
     //all can get previous trip data of student
@@ -80,15 +95,13 @@ public class LnaController{
         long time = date.getTime();
         Timestamp currentTimestamp = new Timestamp(time);
 
-
         List<TripData> studentOutTrip = (List<TripData>) tripDataRepository.getStudentIn(student_id);//first check if student is checking in
         if(studentOutTrip.size() > 0) {//not checked case where more than one trips may have missing in-times
 
             long gapBetweenEntryExit = 5 * 60 * 1000;//check if card is scanned after 5 mins from previous
             if(
-                    (
-                            new Timestamp(studentOutTrip.get(0).getActual_out_time().getTime() + gapBetweenEntryExit)
-                    ).after(currentTimestamp)
+                    (new Timestamp(studentOutTrip.get(0).getActual_out_time().getTime() + gapBetweenEntryExit))
+                            .after(currentTimestamp)
             ){
                 return;
             }
@@ -106,7 +119,4 @@ public class LnaController{
         }
         TripData newTrip = new TripData(student_id, permissionPresent, currentTimestamp);
     }
-
-
-
 }

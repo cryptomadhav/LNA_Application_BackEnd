@@ -3,22 +3,23 @@ package com.LNAproject.LNAApplication.domain;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "student")
+//@Table(name = "student")
 public class Student {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "student_id")
+    @Id @GeneratedValue
+    private Long id;
+//    @GeneratedValue
+//    @Column(name = "student_id")
     private String studentId;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "student_id", referencedColumnName = "user_id")
-    private User user;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "student_id", referencedColumnName = "user_id")
+//    private User user;
 
-    @Column(name = "phone_number")
+//    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "property")
+//    @Column(name = "property")
     private String property;
 
     public String getStudentId() {
@@ -29,13 +30,13 @@ public class Student {
         this.studentId = studentId;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -52,9 +53,4 @@ public class Student {
     public void setProperty(String property) {
         this.property = property;
     }
-
-
-    //    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "parent_id", referencedColumnName = "parent_id")
-//    private Parent parent_id;
 }
