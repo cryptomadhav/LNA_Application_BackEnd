@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "gapBetweenEntryExit",
+      "type": "java.lang.String",
+      "description": "Description for gapBetweenEntryExit."
+  }
+] }

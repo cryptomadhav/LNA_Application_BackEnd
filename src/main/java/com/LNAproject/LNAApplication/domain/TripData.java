@@ -1,9 +1,12 @@
 package com.LNAproject.LNAApplication.domain;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 
 @Entity
+@Table(name="trip_data")
 public class TripData {
     @Id
     @GeneratedValue
@@ -21,10 +24,20 @@ public class TripData {
     boolean permissionPresent;
 
     @Column(name = "actual_out_time")
-    private ZonedDateTime actual_out_time;
+    private Timestamp actual_out_time;
 
     @Column(name = "actual_in_time")
-    private ZonedDateTime actual_in_time;
+    private Timestamp actual_in_time;
+
+    public TripData() {
+
+    }
+
+    public TripData(String student_id, boolean permissionPresent, Timestamp actual_out_time) {
+        this.student_id = student_id;
+        this.permissionPresent = permissionPresent;
+        this.actual_out_time = actual_out_time;
+    }
 
     public String getTrip_id() {
         return trip_id;
@@ -58,19 +71,19 @@ public class TripData {
         this.permissionPresent = permissionPresent;
     }
 
-    public ZonedDateTime getActual_out_time() {
+    public Timestamp getActual_out_time() {
         return actual_out_time;
     }
 
-    public void setActual_out_time(ZonedDateTime actual_out_time) {
+    public void setActual_out_time(Timestamp actual_out_time) {
         this.actual_out_time = actual_out_time;
     }
 
-    public ZonedDateTime getActual_in_time() {
+    public Timestamp getActual_in_time() {
         return actual_in_time;
     }
 
-    public void setActual_in_time(ZonedDateTime actual_in_time) {
+    public void setActual_in_time(Timestamp actual_in_time) {
         this.actual_in_time = actual_in_time;
     }
 }

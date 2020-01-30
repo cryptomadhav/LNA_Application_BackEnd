@@ -1,9 +1,12 @@
 package com.LNAproject.LNAApplication.domain;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 
 @Entity
+@Table(name="request")
 public class Request {
     @Id @GeneratedValue
     @Column(name = "request_id")
@@ -23,16 +26,16 @@ public class Request {
     private String purpose;
 
     @Column(name = "expected_in-time")
-    private ZonedDateTime expectedInTime;
+    private Timestamp expectedInTime;
 
     @Column(name = "expected_out-time")
-    private ZonedDateTime expectedOutTime;
+    private Timestamp expectedOutTime;
 
 
     public Request() {
     }
 
-    public Request(String student_id, String status, String purpose, ZonedDateTime expectedInTime, ZonedDateTime expectedOutTime) {
+    public Request(String student_id, String status, String purpose, Timestamp expectedInTime, Timestamp expectedOutTime) {
 
         this.student_id = student_id;
         this.status = status;
@@ -82,19 +85,19 @@ public class Request {
         this.purpose = purpose;
     }
 
-    public ZonedDateTime getExpectedInTime() {
+    public Timestamp getExpectedInTime() {
         return expectedInTime;
     }
 
-    public void setExpectedInTime(ZonedDateTime expectedInTime) {
+    public void setExpectedInTime(Timestamp expectedInTime) {
         this.expectedInTime = expectedInTime;
     }
 
-    public ZonedDateTime getExpectedOutTime() {
+    public Timestamp getExpectedOutTime() {
         return expectedOutTime;
     }
 
-    public void setExpectedOutTime(ZonedDateTime expectedOutTime) {
+    public void setExpectedOutTime(Timestamp expectedOutTime) {
         this.expectedOutTime = expectedOutTime;
     }
 }
