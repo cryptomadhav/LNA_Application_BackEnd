@@ -16,7 +16,7 @@ public class Request {
     private String status;
 
 //    @Column(name = "student_id")
-    private String student_id;
+    private Long student_id;
 
 //    @OneToOne
 //    @JoinColumn(name = "student_id", referencedColumnName = "student_id", insertable = false, updatable = false)
@@ -35,13 +35,16 @@ public class Request {
     public Request() {
     }
 
-    public Request(String student_id, String status, String purpose, Timestamp expectedInTime, Timestamp expectedOutTime) {
+    public Request(Long student_id,String request_id,  String purpose, Timestamp expectedOutTime,Timestamp expectedInTime,String status) {
 
         this.student_id = student_id;
-        this.status = status;
+        this.request_id=request_id;
+
         this.purpose = purpose;
-        this.expectedInTime = expectedInTime;
         this.expectedOutTime = expectedOutTime;
+        this.expectedInTime = expectedInTime;
+
+        this.status = status;
 
     }
 
@@ -53,19 +56,11 @@ public class Request {
         this.request_id = request_id;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getStudent_id() {
+    public Long getStudent_id() {
         return student_id;
     }
 
-    public void setStudent_id(String student_id) {
+    public void setStudent_id(Long student_id) {
         this.student_id = student_id;
     }
 
@@ -100,4 +95,14 @@ public class Request {
     public void setExpectedOutTime(Timestamp expectedOutTime) {
         this.expectedOutTime = expectedOutTime;
     }
+
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
 }

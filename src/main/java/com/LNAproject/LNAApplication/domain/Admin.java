@@ -10,17 +10,17 @@ public class Admin {
     @Id
 //    @GeneratedValue
 //    @Column(name = "admin_id")
-    private String admin_id;
+    private Long admin_id;
 
 //    @OneToOne(cascade = CascadeType.ALL)
 //    @JoinColumn(name = "admin_id", referencedColumnName = "user_id")
 //    private User user;
 
-    public String getAdmin_id() {
+    public Long getAdmin_id() {
         return admin_id;
     }
 
-    public void setAdmin_id(String admin_id) {
+    public void setAdmin_id(Long admin_id) {
         this.admin_id = admin_id;
     }
 

@@ -10,7 +10,7 @@ public class Student {
     private Long id;
 //    @GeneratedValue
 //    @Column(name = "student_id")
-    private String studentId;
+    private Long student_id;
 
 //    @OneToOne(cascade = CascadeType.ALL)
 //    @JoinColumn(name = "student_id", referencedColumnName = "user_id")
@@ -22,12 +22,12 @@ public class Student {
 //    @Column(name = "property")
     private String property;
 
-    public String getStudentId() {
-        return studentId;
+    public Long getStudent_id() {
+        return student_id;
     }
 
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
+    public void setStudent_id(Long student_id) {
+        this.student_id = student_id;
     }
 
 //    public User getUser() {

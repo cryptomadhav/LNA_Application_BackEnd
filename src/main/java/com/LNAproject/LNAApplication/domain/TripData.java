@@ -9,10 +9,10 @@ public class TripData {
     @Id
 //    @GeneratedValue
 //    @Column(name = "trip_id")
-    private String trip_id;
+    private Long trip_id;
 
 //    @Column(name = "student_id")
-    private String student_id;
+    private Long student_id;
 //
 //    @OneToOne
 //    @JoinColumn(name = "student_id", referencedColumnName = "student_id", insertable = false, updatable = false)
@@ -31,25 +31,25 @@ public class TripData {
 
     }
 
-    public TripData(String student_id, boolean permissionPresent, Timestamp actual_out_time) {
+    public TripData(Long student_id, boolean permissionPresent, Timestamp actual_out_time) {
         this.student_id = student_id;
         this.permissionPresent = permissionPresent;
         this.actual_out_time = actual_out_time;
     }
 
-    public String getTrip_id() {
+    public Long getTrip_id() {
         return trip_id;
     }
 
-    public void setTrip_id(String trip_id) {
+    public void setTrip_id(Long trip_id) {
         this.trip_id = trip_id;
     }
 
-    public String getStudent_id() {
+    public Long getStudent_id() {
         return student_id;
     }
 
-    public void setStudent_id(String student_id) {
+    public void setStudent_id(Long student_id) {
         this.student_id = student_id;
     }
 //

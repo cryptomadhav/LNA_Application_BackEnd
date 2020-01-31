@@ -12,7 +12,7 @@ public class User {
     @Id @GeneratedValue
     private Long id;
 //    @Column(name = "user_id")
-    private String user_id;
+    private Long user_id;
 
 //    @OneToOne(mappedBy = "parent_id")
 //    private Parent parent;
@@ -23,17 +23,17 @@ public class User {
 //    @Column(name = "user_type")
     private String user_type;
 
-    public User(String user_id, String user_type) {
+    public User(Long user_id, String user_type) {
         this.user_id = user_id;
         this.user_type = user_type;
     }
 
 
-    public String getUser_id() {
+    public Long getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(String user_id) {
+    public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
 
