@@ -1,9 +1,15 @@
 package com.LNAproject.LNAApplication.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 @Entity
 //@Table(name="request")
@@ -12,37 +18,46 @@ public class Request {
 //    @Column(name = "request_id")
     private String request_id;
 
-//    @Column(name = "request_status")
+    //    @Column(name = "request_status")
     private String status;
 
-//    @Column(name = "student_id")
-    private Long student_id;
+    //    @Column(name = "student_id")
+    private String student_id;
 
 //    @OneToOne
 //    @JoinColumn(name = "student_id", referencedColumnName = "student_id", insertable = false, updatable = false)
 //    private Student student;
 
-//    @Column(name = "purpose")
+    //    @Column(name = "purpose")
     private String purpose;
 
-//    @Column(name = "expected_in-time")
-    private Timestamp expectedInTime;
-
-//    @Column(name = "expected_out-time")
-    private Timestamp expectedOutTime;
+    private Date expectedInTime;
+    private Date expectedOutTime;
 
 
     public Request() {
     }
 
-    public Request(Long student_id,String request_id,  String purpose, Timestamp expectedOutTime,Timestamp expectedInTime,String status) {
+    public Request(String request_id, String student_id, String purpose, String expectedOutTime,String expectedInTime,String status) throws ParseException {
 
+        this.request_id = request_id;
         this.student_id = student_id;
-        this.request_id=request_id;
-
         this.purpose = purpose;
-        this.expectedOutTime = expectedOutTime;
-        this.expectedInTime = expectedInTime;
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("expected out time" + expectedOutTime);
+//        System.out.println("expected In time" + expectedInTime);
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+        this.expectedOutTime = (new SimpleDateFormat("yyyy-MM-dd HH:mm")).parse(expectedOutTime);
+        this.expectedInTime = (new SimpleDateFormat("yyyy-MM-dd HH:mm")).parse(expectedInTime);
+
 
         this.status = status;
 
@@ -56,21 +71,13 @@ public class Request {
         this.request_id = request_id;
     }
 
-    public Long getStudent_id() {
+    public String getStudent_id() {
         return student_id;
     }
 
-    public void setStudent_id(Long student_id) {
+    public void setStudent_id(String student_id) {
         this.student_id = student_id;
     }
-
-//    public Student getStudent() {
-//        return student;
-//    }
-//
-//    public void setStudent(Student student) {
-//        this.student = student;
-//    }
 
     public String getPurpose() {
         return purpose;
@@ -80,22 +87,21 @@ public class Request {
         this.purpose = purpose;
     }
 
-    public Timestamp getExpectedInTime() {
+    public Date getExpectedInTime() {
         return expectedInTime;
     }
 
-    public void setExpectedInTime(Timestamp expectedInTime) {
+    public void setExpectedInTime(Date expectedInTime) {
         this.expectedInTime = expectedInTime;
     }
 
-    public Timestamp getExpectedOutTime() {
+    public Date getExpectedOutTime() {
         return expectedOutTime;
     }
 
-    public void setExpectedOutTime(Timestamp expectedOutTime) {
+    public void setExpectedOutTime(Date expectedOutTime) {
         this.expectedOutTime = expectedOutTime;
     }
-
 
     public String getStatus() {
         return status;
