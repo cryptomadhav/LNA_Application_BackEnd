@@ -1,7 +1,6 @@
 package com.LNAproject.LNAApplication.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -14,26 +13,13 @@ import java.text.SimpleDateFormat;
 @Entity
 //@Table(name="request")
 public class Request {
-    @Id //@GeneratedValue
-//    @Column(name = "request_id")
+    @Id
     private String request_id;
-
-    //    @Column(name = "request_status")
     private String status;
-
-    //    @Column(name = "student_id")
     private String student_id;
-
-//    @OneToOne
-//    @JoinColumn(name = "student_id", referencedColumnName = "student_id", insertable = false, updatable = false)
-//    private Student student;
-
-    //    @Column(name = "purpose")
     private String purpose;
-
     private Date expectedInTime;
     private Date expectedOutTime;
-
 
     public Request() {
     }
@@ -43,24 +29,9 @@ public class Request {
         this.request_id = request_id;
         this.student_id = student_id;
         this.purpose = purpose;
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("expected out time" + expectedOutTime);
-//        System.out.println("expected In time" + expectedInTime);
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
         this.expectedOutTime = (new SimpleDateFormat("yyyy-MM-dd HH:mm")).parse(expectedOutTime);
         this.expectedInTime = (new SimpleDateFormat("yyyy-MM-dd HH:mm")).parse(expectedInTime);
-
-
         this.status = status;
-
     }
 
     public String getRequest_id() {

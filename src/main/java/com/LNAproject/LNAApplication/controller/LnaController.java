@@ -83,24 +83,10 @@ public class LnaController{
     }
     @PostMapping(value = "/request")
     public void enterRequestDetails(@RequestBody TempRequest tempRequest) throws ParseException {
-        System.out.println(tempRequest.expectedOutTime);
         tempRequest.setExpectedOutTime((new StringBuilder(tempRequest.getExpectedOutTime()).replace(10, 11, " ")).toString());
         tempRequest.setExpectedInTime((new StringBuilder(tempRequest.getExpectedInTime()).replace(10, 11, " ")).toString());
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("expected out time" + tempRequest.getExpectedOutTime());
-//        System.out.println("expected In time" + tempRequest.getExpectedInTime());
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
-//        System.out.println("/////////////////////////////////////////////");
         Request request = new Request(Integer.toString(requestCount ++), tempRequest.student_id, tempRequest.purpose, tempRequest.expectedOutTime, tempRequest.expectedInTime, tempRequest.status);
         requestRepository.save(request);
-        tempRequest = null;
     }
     @PostMapping(value = "/user")
     public void getUserdata(@RequestBody User user) {
@@ -129,12 +115,6 @@ public class LnaController{
     public List<TripData> viewTripData(@PathVariable String student_id) {
         return (List<TripData>) tripDataRepository.findAll();
     }
-
-    //student creates request in request table
-//    @PostMapping(value = "/student/{student_id}")
-//    public void makeRequest(@PathVariable Long student_id, Long request_id, String purpose, Timestamp expectedOutTime, Timestamp expectedInTime,String status) {
-//        requestRepository.save(new Request(student_id, request_id ,purpose,  expectedOutTime, expectedInTime, status));
-//    }
 
     //parent responds to request by changing status if request
     @PutMapping(value = "/request/*/{request_id}")

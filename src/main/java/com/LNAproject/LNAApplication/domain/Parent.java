@@ -3,17 +3,11 @@ package com.LNAproject.LNAApplication.domain;
 import javax.persistence.*;
 
 @Entity
-//@Table(name = "parent")
 public class Parent {
 
     @Id
-//    @Column(name = "parent_id")
     private Long parent_id;
-
-//    @Column(name = "student_id")
     private Long student_id;
-
-//    @Column(name = "phone_number")
     private String phoneNumber;
 
     public Parent() {
