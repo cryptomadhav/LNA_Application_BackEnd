@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 public class LnaController{
 
@@ -28,6 +30,7 @@ public class LnaController{
     @Autowired
     AdminRepository adminRepository;
 
+    Integer requestCount = 1;
 
     //only admin can access all students request data
     @GetMapping(value = "/request")
@@ -39,7 +42,6 @@ public class LnaController{
     @GetMapping(value = "/request/{student_id}")
     public List<Request> viewRequest(@PathVariable Long student_id) {
         List<Request> list = (List<Request>) requestRepository.findAll();
-        System.out.println("Hi, This is a test message");
         List<Request> returnList = new ArrayList<Request>();
         for (Request request : list) {
             if (request.getStudent_id().equals(student_id)) {
@@ -61,7 +63,7 @@ public class LnaController{
     }
 
     @GetMapping(value = "/parent")
-    public List<Parent> viewAllparentData() {
+    public List<Parent> viewAllParentData() {
         return (List<Parent>) parentRepository.findAll();
     }
 
@@ -80,11 +82,25 @@ public class LnaController{
         }
     }
     @PostMapping(value = "/request")
-    public void enterRequestDetails(@RequestBody @NotNull List<Request> requests) {
-        for(Request request : requests) {
-            requestRepository.save(request);
-
-        }
+    public void enterRequestDetails(@RequestBody TempRequest tempRequest) throws ParseException {
+        System.out.println(tempRequest.expectedOutTime);
+        tempRequest.setExpectedOutTime((new StringBuilder(tempRequest.getExpectedOutTime()).replace(10, 11, " ")).toString());
+        tempRequest.setExpectedInTime((new StringBuilder(tempRequest.getExpectedInTime()).replace(10, 11, " ")).toString());
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("expected out time" + tempRequest.getExpectedOutTime());
+//        System.out.println("expected In time" + tempRequest.getExpectedInTime());
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+//        System.out.println("/////////////////////////////////////////////");
+        Request request = new Request(Integer.toString(requestCount ++), tempRequest.student_id, tempRequest.purpose, tempRequest.expectedOutTime, tempRequest.expectedInTime, tempRequest.status);
+        requestRepository.save(request);
+        tempRequest = null;
     }
     @PostMapping(value = "/user")
     public void getUserdata(@RequestBody User user) {
@@ -92,15 +108,6 @@ public class LnaController{
         new_record = new User(user.getUser_id(), user.getUser_type());
         userRepository.save(new_record);
     }
-
-//    @PostMapping(value = "/request")
-//    public void enterUserDetails(@RequestBody Request requests) {
-//        Request request =new Request(requests.getStudent_id(),requests.getRequest_id(),requests.getPurpose(),requests.getExpectedOutTime(),requests.getExpectedInTime(),requests.getStatus());
-//
-//            requestRepository.save(request);
-//
-//
-//    }
 
     @PostMapping(value = "/parent")
     public void enterParentDetails(@RequestBody @NotNull List<Parent> parentList) {
@@ -169,5 +176,74 @@ public class LnaController{
             }
         }
         TripData newTrip = new TripData(student_id, permissionPresent, currentTimestamp);
+    }
+}
+
+class TempRequest{
+    String request_id;
+    String status;
+    String student_id;
+    String purpose;
+    String expectedInTime;
+    String expectedOutTime;
+
+    public TempRequest() {
+    }
+
+    public TempRequest(String request_id, String status, String student_id, String purpose, String expectedInTime, String expectedOutTime) {
+        this.request_id = request_id;
+        this.status = status;
+        this.student_id = student_id;
+        this.purpose = purpose;
+        this.expectedInTime = (new StringBuilder(expectedInTime).replace(10, 11, " ")).toString();
+        this.expectedOutTime = (new StringBuilder(expectedOutTime).replace(10, 11, " ")).toString();
+    }
+
+    public String getRequest_id() {
+        return request_id;
+    }
+
+    public void setRequest_id(String request_id) {
+        this.request_id = request_id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStudent_id() {
+        return student_id;
+    }
+
+    public void setStudent_id(String student_id) {
+        this.student_id = student_id;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
+    }
+
+    public String getExpectedInTime() {
+        return expectedInTime;
+    }
+
+    public void setExpectedInTime(String expectedInTime) {
+        this.expectedInTime = expectedInTime;
+    }
+
+    public String getExpectedOutTime() {
+        return expectedOutTime;
+    }
+
+    public void setExpectedOutTime(String expectedOutTime) {
+        this.expectedOutTime = expectedOutTime;
     }
 }
