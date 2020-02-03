@@ -39,6 +39,7 @@ public class LnaController{
     @GetMapping(value = "/request/{student_id}")
     public List<Request> viewRequest(@PathVariable Long student_id) {
         List<Request> list = (List<Request>) requestRepository.findAll();
+        System.out.println("Hi, This is a test message");
         List<Request> returnList = new ArrayList<Request>();
         for (Request request : list) {
             if (request.getStudent_id().equals(student_id)) {
