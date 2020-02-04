@@ -11,6 +11,4 @@ import java.util.Collection;
 import java.util.List;
 
 public interface TripDataRepository extends CrudRepository<TripData, String> {
-    @Query(value = "select * from tripdata t where t.student_id = :#{#student_id} and t.actual_in_time = null", nativeQuery = true)
-    Collection<TripData> getStudentIn(@Param("student_id") String student_id);
 }

@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 @CrossOrigin
 @RestController
@@ -31,6 +33,7 @@ public class LnaController{
     AdminRepository adminRepository;
 
     Integer requestCount = 1;
+    Integer tripCount = 1;
 
     //only admin can access all students request data
     @GetMapping(value = "/request")
@@ -40,11 +43,11 @@ public class LnaController{
 
     //all can access request data of student
     @GetMapping(value = "/request/{student_id}")
-    public List<Request> viewRequest(@PathVariable Long student_id) {
+    public List<Request> viewRequest(@PathVariable String student_id) {
         List<Request> list = (List<Request>) requestRepository.findAll();
         List<Request> returnList = new ArrayList<Request>();
         for (Request request : list) {
-            if (request.getStudent_id().equals(student_id)) {
+            if (request.getStudent_id().equals(student_id) && request.getStatus().equals("pending")) {
                 returnList.add(request);
             }
         }
@@ -102,6 +105,7 @@ public class LnaController{
             userRepository.save(new User(parent.getParent_id(), "parent"));
         }
     }
+
     @PostMapping(value = "/admin")
     public void enterAdminDetails(@RequestBody @NotNull List<Admin> adminList) {
         for(Admin admin : adminList) {
@@ -117,48 +121,50 @@ public class LnaController{
     }
 
     //parent responds to request by changing status if request
-    @PutMapping(value = "/request/*/{request_id}")
-    public void respondRequest(@PathVariable String request_id,@RequestBody String new_status) {
-        Request request;
-        request = requestRepository.findById(request_id).get();
-        request.setStatus(new_status);
+    @PostMapping(value = "/request/all/{request_id}")
+    public void respondRequest(@PathVariable String request_id, @RequestBody String new_status) {
+        Request request = requestRepository.findById(request_id).get();
         requestRepository.deleteById(request_id);
+        request.setStatus(new_status);
         requestRepository.save(request);
     }
 
     //executed whenever card is scanned starts or ends trip
-    @PostMapping(value = "/trip")
-    public void startOrEndTrip(Long student_id) {
+    @PostMapping(value = "/trip/{student_id}")
+    public void startOrEndTrip(@PathVariable String student_id) throws ParseException {
         Date date= new Date();
         long time = date.getTime();
         Timestamp currentTimestamp = new Timestamp(time);
-
-        List<TripData> studentOutTrip = (List<TripData>) tripDataRepository.getStudentIn(Long.toString(student_id));//first check if student is checking in
-        if(studentOutTrip.size() > 0) {//not checked case where more than one trips may have missing in-times
-
-            long gapBetweenEntryExit = 10 * 1000;//check if card is scanned after 5 mins from previous
-            if(
-                    (new Timestamp(studentOutTrip.get(0).getActual_out_time().getTime() + gapBetweenEntryExit))
-                            .after(currentTimestamp)
-            ){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
+        date = dateFormat.parse(currentTimestamp.toString());
+        List<TripData> data = (List<TripData>) tripDataRepository.findAll();
+        List<TripData> studentOutTrip = new ArrayList<TripData>();
+        for(TripData trip : data) {
+            if(trip.getStudent_id().equals(student_id) && trip.getActual_in_time() == null) {
+                trip.setActual_in_time(date);
+                TripData temp = trip;
+                tripDataRepository.deleteById(temp.getTrip_id());
+                temp.setActual_in_time(date);
+                tripDataRepository.save(temp);
                 return;
             }
-            studentOutTrip.get(0).setActual_in_time(currentTimestamp);
-            return;
         }
         //if not returned then student in checking out
-        List<Request> requests = (List<Request>) requestRepository.findAll();
+        List<Request> requests = (List<Request>) viewRequest(student_id);
         boolean permissionPresent = false;
         for(Request request : requests) {
-            if(currentTimestamp.before(request.getExpectedInTime()) && currentTimestamp.after(request.getExpectedOutTime())) {
+            if(date.before(request.getExpectedInTime()) && currentTimestamp.after(request.getExpectedOutTime())) {
                 permissionPresent = true;
                 break;
             }
         }
-        TripData newTrip = new TripData(student_id, permissionPresent, currentTimestamp);
+        TripData newTrip = new TripData(Integer.toString(tripCount ++), student_id, permissionPresent, date);
+        tripDataRepository.save(newTrip);
     }
 }
 
+//Temporary class to handle incoming date data in string and convert it to date format
 class TempRequest{
     String request_id;
     String status;
