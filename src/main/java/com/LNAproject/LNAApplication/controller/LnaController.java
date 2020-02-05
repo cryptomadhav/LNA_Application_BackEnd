@@ -32,13 +32,22 @@ public class LnaController{
     @Autowired
     AdminRepository adminRepository;
 
-    Integer requestCount = 1;
-    Integer tripCount = 1;
+    //counts used to keep track trip_id and request_id
+    int requestCount = 1;
+    int tripCount = 1;
 
     //only admin can access all students request data
-    @GetMapping(value = "/request")
-    public List<Request> viewAllRequest() {
-        return (List<Request>) requestRepository.findAll();
+    @GetMapping(value = "/request/status/{status}")
+    public List<Request> viewAllRequest(@PathVariable String status) {
+        List<Request> list = (List<Request>) requestRepository.findAll();
+        if(status.equals("all")) return list;
+        List<Request> returnList = new ArrayList<Request>();
+        for(Request request : list) {
+            if(!request.getStatus().equals("started")) {
+                returnList.add(request);
+            }
+        }
+        return returnList;
     }
 
     //all can access request data of student
@@ -54,17 +63,45 @@ public class LnaController{
         return returnList;
     }
 
-    //only admin can access trip data of all students
+    //only admin can access, trip data of all students
     @GetMapping(value = "/trip")
     public List<TripData> viewAllTripData() {
         return (List<TripData>) tripDataRepository.findAll();
     }
 
+    //only admin can access trip data of all students currently out
+    @GetMapping(value = "/trip/current")
+    public List<TripData> viewCurrentTripData() {
+        List<TripData> tripData = (List<TripData>) tripDataRepository.findAll();
+        List<TripData> ret = new ArrayList<>();
+        for(TripData tripData1 : tripData) {
+            if(tripData1.getActual_in_time() == null) {
+                ret.add(tripData1);
+            }
+        }
+        return ret;
+    }
+
+    //Get all trip data of a student
+    @GetMapping(value = "/trip/student/{student_id}")
+    public List<TripData> viewCurrentStudentTripData(@PathVariable String student_id) {
+        List<TripData> tripData = (List<TripData>) tripDataRepository.findAll();
+        List<TripData> ret = new ArrayList<>();
+        for(TripData tripData1 : tripData) {
+            if(tripData1.getStudent_id().equals(student_id)) {
+                ret.add(tripData1);
+            }
+        }
+        return ret;
+    }
+
+    //get all user data
     @GetMapping(value = "/user")
     public List<User> viewAllUserData() {
         return (List<User>) userRepository.findAll();
     }
 
+    //get all parent data
     @GetMapping(value = "/parent")
     public List<Parent> viewAllParentData() {
         return (List<Parent>) parentRepository.findAll();
@@ -84,13 +121,18 @@ public class LnaController{
             userRepository.save(new User(student.getStudent_id(), "student"));
         }
     }
+
+    //create request to request table
     @PostMapping(value = "/request")
     public void enterRequestDetails(@RequestBody TempRequest tempRequest) throws ParseException {
+        //removes "T" present in data returned
         tempRequest.setExpectedOutTime((new StringBuilder(tempRequest.getExpectedOutTime()).replace(10, 11, " ")).toString());
         tempRequest.setExpectedInTime((new StringBuilder(tempRequest.getExpectedInTime()).replace(10, 11, " ")).toString());
         Request request = new Request(Integer.toString(requestCount ++), tempRequest.student_id, tempRequest.purpose, tempRequest.expectedOutTime, tempRequest.expectedInTime, tempRequest.status);
         requestRepository.save(request);
     }
+
+    //add users to database
     @PostMapping(value = "/user")
     public void getUserdata(@RequestBody User user) {
         User new_record;
@@ -98,6 +140,7 @@ public class LnaController{
         userRepository.save(new_record);
     }
 
+    //add parents to database
     @PostMapping(value = "/parent")
     public void enterParentDetails(@RequestBody @NotNull List<Parent> parentList) {
         for(Parent parent : parentList) {
@@ -106,6 +149,7 @@ public class LnaController{
         }
     }
 
+    //add admins to database
     @PostMapping(value = "/admin")
     public void enterAdminDetails(@RequestBody @NotNull List<Admin> adminList) {
         for(Admin admin : adminList) {
@@ -120,12 +164,13 @@ public class LnaController{
         return (List<TripData>) tripDataRepository.findAll();
     }
 
-    //parent responds to request by changing status if request
+    //parent responds to request by changing status of request
     @PostMapping(value = "/request/all/{request_id}")
     public void respondRequest(@PathVariable String request_id, @RequestBody String new_status) {
         Request request = requestRepository.findById(request_id).get();
         requestRepository.deleteById(request_id);
-        request.setStatus(new_status);
+        //Removes "=" present in the end of new_status
+        request.setStatus(new_status.substring(0, new_status.length() - 1));
         requestRepository.save(request);
     }
 
