@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -88,7 +91,7 @@ public class LnaController{
         List<TripData> tripData = (List<TripData>) tripDataRepository.findAll();
         List<TripData> ret = new ArrayList<>();
         for(TripData tripData1 : tripData) {
-            if(tripData1.getStudent_id().equals(student_id)) {
+            if(tripData1.getStudent_id().equals(student_id) && tripData1.getActual_in_time() != null) {
                 ret.add(tripData1);
             }
         }
@@ -177,34 +180,40 @@ public class LnaController{
     //executed whenever card is scanned starts or ends trip
     @PostMapping(value = "/trip/{student_id}")
     public void startOrEndTrip(@PathVariable String student_id) throws ParseException {
-        Date date= new Date();
-        long time = date.getTime();
-        Timestamp currentTimestamp = new Timestamp(time);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Calcutta"));
-        date = dateFormat.parse(currentTimestamp.toString());
+        ZonedDateTime time = java.time.ZonedDateTime.now(ZoneOffset.ofHoursMinutes(5, 30));
         List<TripData> data = (List<TripData>) tripDataRepository.findAll();
-        List<TripData> studentOutTrip = new ArrayList<TripData>();
         for(TripData trip : data) {
             if(trip.getStudent_id().equals(student_id) && trip.getActual_in_time() == null) {
-                trip.setActual_in_time(date);
+                trip.setActual_in_time(java.time.ZonedDateTime.now(ZoneOffset.ofHoursMinutes(5, 30)));
                 TripData temp = trip;
                 tripDataRepository.deleteById(temp.getTrip_id());
-                temp.setActual_in_time(date);
+                temp.setActual_in_time(java.time.ZonedDateTime.now(ZoneOffset.ofHoursMinutes(5, 30)));
                 tripDataRepository.save(temp);
                 return;
             }
         }
-        //if not returned then student in checking out
-        List<Request> requests = (List<Request>) viewRequest(student_id);
+        //if not returned then student is checking out
+        List<Request> list = (List<Request>) requestRepository.findAll();
+        List<Request> requests = new ArrayList<Request>();
+        for (Request request : list) {
+            if (request.getStudent_id().equals(student_id) && request.getStatus().equals("approved")) {
+                requests.add(request);
+            }
+        }
+        System.out.println("going to create new trip");
         boolean permissionPresent = false;
+        System.out.println("request size" + requests.size());
         for(Request request : requests) {
-            if(date.before(request.getExpectedInTime()) && currentTimestamp.after(request.getExpectedOutTime())) {
+            System.out.println("did check");
+            if(time.compareTo(request.getExpectedInTime()) < 0 && time.compareTo(request.getExpectedOutTime()) > 0) {
                 permissionPresent = true;
                 break;
             }
         }
-        TripData newTrip = new TripData(Integer.toString(tripCount ++), student_id, permissionPresent, date);
+
+        System.out.println("create new trip");
+        TripData newTrip = new TripData(Integer.toString(tripCount ++), student_id, permissionPresent, time);
         tripDataRepository.save(newTrip);
     }
 }
