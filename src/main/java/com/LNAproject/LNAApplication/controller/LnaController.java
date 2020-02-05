@@ -193,6 +193,7 @@ public class LnaController{
                 return;
             }
         }
+
         //if not returned then student is checking out
         List<Request> list = (List<Request>) requestRepository.findAll();
         List<Request> requests = new ArrayList<Request>();
@@ -201,18 +202,13 @@ public class LnaController{
                 requests.add(request);
             }
         }
-        System.out.println("going to create new trip");
         boolean permissionPresent = false;
-        System.out.println("request size" + requests.size());
         for(Request request : requests) {
-            System.out.println("did check");
             if(time.compareTo(request.getExpectedInTime()) < 0 && time.compareTo(request.getExpectedOutTime()) > 0) {
                 permissionPresent = true;
                 break;
             }
         }
-
-        System.out.println("create new trip");
         TripData newTrip = new TripData(Integer.toString(tripCount ++), student_id, permissionPresent, time);
         tripDataRepository.save(newTrip);
     }
