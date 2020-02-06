@@ -6,31 +6,35 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
 @Entity
-//@Table(name="request")
 public class Request {
     @Id
     private String request_id;
     private String status;
     private String student_id;
     private String purpose;
-    private Date expectedInTime;
-    private Date expectedOutTime;
+    private ZonedDateTime expectedInTime;
+    private ZonedDateTime expectedOutTime;
 
     public Request() {
     }
 
-    public Request(String request_id, String student_id, String purpose, String expectedOutTime,String expectedInTime,String status) throws ParseException {
+    public Request(String request_id, String student_id, String purpose, String expectedOutTime, String expectedInTime, String status) throws ParseException {
 
         this.request_id = request_id;
         this.student_id = student_id;
         this.purpose = purpose;
-        this.expectedOutTime = (new SimpleDateFormat("yyyy-MM-dd HH:mm")).parse(expectedOutTime);
-        this.expectedInTime = (new SimpleDateFormat("yyyy-MM-dd HH:mm")).parse(expectedInTime);
+        LocalDateTime localDateTime1 = LocalDateTime.parse(expectedOutTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        this.expectedOutTime = localDateTime1.atZone(ZoneId.of("Asia/Calcutta"));
+        LocalDateTime localDateTime2 = LocalDateTime.parse(expectedInTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        this.expectedInTime = localDateTime2.atZone(ZoneId.of("Asia/Calcutta"));
         this.status = status;
     }
 
@@ -58,19 +62,19 @@ public class Request {
         this.purpose = purpose;
     }
 
-    public Date getExpectedInTime() {
+    public ZonedDateTime getExpectedInTime() {
         return expectedInTime;
     }
 
-    public void setExpectedInTime(Date expectedInTime) {
+    public void setExpectedInTime(ZonedDateTime expectedInTime) {
         this.expectedInTime = expectedInTime;
     }
 
-    public Date getExpectedOutTime() {
+    public ZonedDateTime getExpectedOutTime() {
         return expectedOutTime;
     }
 
-    public void setExpectedOutTime(Date expectedOutTime) {
+    public void setExpectedOutTime(ZonedDateTime expectedOutTime) {
         this.expectedOutTime = expectedOutTime;
     }
 

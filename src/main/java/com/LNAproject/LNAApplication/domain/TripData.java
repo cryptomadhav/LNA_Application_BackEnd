@@ -2,6 +2,7 @@ package com.LNAproject.LNAApplication.domain;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Entity
@@ -10,13 +11,13 @@ public class TripData {
     private String trip_id;
     private String student_id;
     boolean permissionPresent;
-    private Date actual_out_time;
-    private Date actual_in_time;
+    private ZonedDateTime actual_out_time;
+    private ZonedDateTime actual_in_time;
 
     public TripData() {
     }
 
-    public TripData(String trip_id,String student_id, boolean permissionPresent, Date actual_out_time) {
+    public TripData(String trip_id,String student_id, boolean permissionPresent, ZonedDateTime actual_out_time) {
         this.trip_id = trip_id;
         this.student_id = student_id;
         this.permissionPresent = permissionPresent;
@@ -48,19 +49,19 @@ public class TripData {
         this.permissionPresent = permissionPresent;
     }
 
-    public Date getActual_out_time() {
+    public ZonedDateTime getActual_out_time() {
         return actual_out_time;
     }
 
-    public void setActual_out_time(Date actual_out_time) {
+    public void setActual_out_time(ZonedDateTime actual_out_time) {
         this.actual_out_time = actual_out_time;
     }
 
-    public Date getActual_in_time() {
+    public ZonedDateTime getActual_in_time() {
         return actual_in_time;
     }
 
-    public void setActual_in_time(Date actual_in_time) {
+    public void setActual_in_time(ZonedDateTime actual_in_time) {
         this.actual_in_time = actual_in_time;
     }
 }
