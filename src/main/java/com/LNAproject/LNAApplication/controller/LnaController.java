@@ -91,7 +91,7 @@ public class LnaController{
         List<TripData> tripData = (List<TripData>) tripDataRepository.findAll();
         List<TripData> ret = new ArrayList<>();
         for(TripData tripData1 : tripData) {
-            if(tripData1.getStudent_id().equals(student_id) && tripData1.getActual_in_time() != null) {
+            if(tripData1.getStudent_id().equals(student_id)) {
                 ret.add(tripData1);
             }
         }
